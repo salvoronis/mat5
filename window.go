@@ -40,7 +40,7 @@ func createWindow(){
 	dd1.Add(gui.NewImageLabel("x^2-2y"))
 	dd1.Add(gui.NewImageLabel("sin(x)"))
 	dd1.Add(gui.NewImageLabel("sqrt(x)"))
-	dd1.Add(gui.NewImageLabel("sin(2.5*cos(x))"))
+	dd1.Add(gui.NewImageLabel("sin(x)sin(2.5*cos(x))"))
 	scene.Add(dd1)
 
 	ed1 := gui.NewEdit(100, "error")
@@ -60,6 +60,7 @@ func createWindow(){
 	scene.Add(edy)
 
 	var g3 *gui.Graph
+	var gt *gui.Graph
 	var dots []*gui.Image
 	var setted bool = false
 
@@ -69,21 +70,28 @@ func createWindow(){
 		if setted {
 			chart.RemoveGraph(g3)
 			g3 = nil
+			chart.RemoveGraph(gt)
+			gt = nil
 			for i := 0; i < len(dots); i++ {
 				scene.Remove(dots[i])
 			}
 			setted = false
 		}
 		var f func(float32, float32) float32
+		var ft func(float32) float32
 		switch dd1.Selected().Text(){
 		case "x^2-2y":
 			f = one
+			ft = one_true
 		case "sin(x)":
 			f = two
+			ft = two_true
 		case "sqrt(x)":
 			f = three
+			ft = three_true
 		case "sin(x)sin(2.5*cos(x))":
 			f = four
+			ft = four_true
 		}
 		error, err := strconv.ParseFloat(ed1.Text(),32)
 		if err != nil {
@@ -107,12 +115,15 @@ func createWindow(){
 		data := eiler(f, startPoint, float32(error*2), float32(error))
 		data = adams(f, data, float32(xn), float32(error))
 		dlag := make([]float32, 0)
+		truegraph := make([]float32,0)
 		for i := 0.0; i < xn; i+=0.2 {
 			lagrange := InterpolateLagrangePolynomial(float32(i), len(data), data)
 			dlag = append(dlag, lagrange)
+			truegraph = append(truegraph, ft(float32(i)))
 		}
 
 		g3 = chart.AddLineGraph(&math32.Color{0, 0, 1}, dlag)
+		gt = chart.AddLineGraph(&math32.Color{0, 1, 0}, truegraph)
 		setted = true
 
 		dots = make([]*gui.Image,0)
