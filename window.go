@@ -39,8 +39,8 @@ func createWindow(){
 	dd1.SetPosition(10, float32(height)-100)
 	dd1.Add(gui.NewImageLabel("x^2-2y"))
 	dd1.Add(gui.NewImageLabel("sin(x)"))
-	dd1.Add(gui.NewImageLabel("sqrt(x)"))
-	dd1.Add(gui.NewImageLabel("sin(x)sin(2.5*cos(x))"))
+	dd1.Add(gui.NewImageLabel("Log(x+1)"))
+	dd1.Add(gui.NewImageLabel("x+y"))
 	scene.Add(dd1)
 
 	ed1 := gui.NewEdit(100, "error")
@@ -86,10 +86,10 @@ func createWindow(){
 		case "sin(x)":
 			f = two
 			ft = two_true
-		case "sqrt(x)":
+		case "Log(x+1)":
 			f = three
 			ft = three_true
-		case "sin(x)sin(2.5*cos(x))":
+		case "x+y":
 			f = four
 			ft = four_true
 		}
@@ -112,8 +112,8 @@ func createWindow(){
 		step := float32(xn/5)
 		chart.SetRangeX(0.0, step, float32(xn))
 		startPoint := point{x:float32(x0), y:float32(y0)}
-		data := eiler(f, startPoint, float32(error*2), float32(error))
-		data = adams(f, data, float32(xn), float32(error))
+		data := eiler(f, startPoint, float32(error*3), float32(error))
+		data = Adams(f, data, float32(xn), float32(error))
 		dlag := make([]float32, 0)
 		truegraph := make([]float32,0)
 		for i := 0.0; i < xn; i+=0.2 {

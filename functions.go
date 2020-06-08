@@ -33,9 +33,9 @@ func three_true(x float32) float32{
 }
 
 func four(x,y float32) float32{
-	return 1/(x+1)
+	return /*1/(x+1)*/ x+y
 }
 
 func four_true(x float32) float32{
-	return float32(math.Log(float64(x+1)))
+	return /*float32(math.Log(float64(x+1)))*/ float32(math.Exp(float64(x)))-x-1
 }
